@@ -16,18 +16,18 @@ public:
 	void push(T obj, int i);
 	void push(T obj);
 	T& operator[](int);
-	friend ostream& operator<<(ostream& os, const dynamic_arr& tabliczka)
+	friend ostream& operator<<(ostream& os, const dynamic_arr& arr)
 	{
-		for (int i = 0; i < (tabliczka.size); i++)
-			os << (*tabliczka.arr[i]) << endl;
+		for (int i = 0; i < (arr.size); i++)
+			os << (*arr.arr[i]) << endl;
 		return os;
 	}
 	void clear();
 	void resize(int s);
 	void bsort();
 	void swap(T& elem1, T& elem2);
-	void quickSort(int pocz, int koniec);
-	int partition(int pocz, int koniec);
+	void quickSort(int begg, int end);
+	int partition(int begg, int end);
 	dynamic_arr()
 	{
 		size = 0;
@@ -108,27 +108,27 @@ template <typename T> void dynamic_arr<T>::bsort()
 			}
 
 }
-template <typename T> void dynamic_arr<T>::quickSort(int pocz, int koniec) {
-	if (pocz < koniec) {
-		int pivot = partition(pocz, koniec);
+template <typename T> void dynamic_arr<T>::quickSort(int begg, int end) {
+	if (begg < end) {
+		int pivot = partition(begg, end);
 
 		// Rekurencyjne sortowanie przed i za pivotem
-		quickSort(pocz, pivot - 1);
-		quickSort(pivot + 1, koniec);
+		quickSort(begg, pivot - 1);
+		quickSort(pivot + 1, end);
 	}
 }
 
-template <typename T> int dynamic_arr<T>::partition(int pocz, int koniec) {
-	T pivot = arr[koniec]; 
-	int i = pocz - 1;
+template <typename T> int dynamic_arr<T>::partition(int begg, int end) {
+	T pivot = arr[end]; 
+	int i = begg - 1;
 
-	for (int j = pocz; j < koniec; j++) {
+	for (int j = begg; j < end; j++) {
 		if (arr[j] < pivot) {
 			i++;
 			swap(arr[i], arr[j]);
 		}
 	}
 	i++;
-	swap(arr[i], arr[koniec]);
+	swap(arr[i], arr[end]);
 	return i;
 }

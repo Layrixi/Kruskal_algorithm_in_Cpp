@@ -2,88 +2,88 @@
 #include <fstream>
 #include "dynamic_arr.h"
 using namespace std;
-class wezel {
+class node {
 public:
     double x, y;
-    friend ostream& operator<<(ostream& os, const wezel klasa1)
+    friend ostream& operator<<(ostream& os, const node elem1)
     {
-        os << klasa1.x << ", " << klasa1.y;
+        os << elem1.x << ", " << elem1.y;
         return os;
     }
 };
-class krawedz {
+class edge {
 public:
     int node1, node2;
-    double waga;
-    krawedz()
+    double weight;
+    edge()
     {
         node1 = NULL;
         node2 = NULL;
-        waga = 0;
+        weight = 0;
     }
-    krawedz(int n1, int n2, int w)
+    edge(int n1, int n2, int w)
     {
         node1 = n1;
         node2 = n2;
-        waga = w;
+        weight = w;
     }
-    friend bool operator>(const krawedz& klasa1, const krawedz& klasa2)
+    friend bool operator>(const edge& elem1, const edge& elem2)
     {
-        return klasa1.waga > klasa2.waga;
+        return elem1.weight > elem2.weight;
     }
-    friend bool operator<(const krawedz& klasa1, const krawedz& klasa2)
+    friend bool operator<(const edge& elem1, const edge& elem2)
     {
-        return klasa1.waga < klasa2.waga;
+        return elem1.weight < elem2.weight;
     }
-    friend bool operator==(const krawedz& klasa1, const krawedz& klasa2)
+    friend bool operator==(const edge& elem1, const edge& elem2)
     {
-        return klasa1.waga == klasa2.waga;
+        return elem1.weight == elem2.weight;
     }
-    krawedz& operator=(const krawedz& klasa1) {
-        if (this != &klasa1) { 
-            node1 = klasa1.node1;
-            node2 = klasa1.node2;
-            waga = klasa1.waga;
+    edge& operator=(const edge& elem1) {
+        if (this != &elem1) { 
+            node1 = elem1.node1;
+            node2 = elem1.node2;
+            weight = elem1.weight;
         }
         return *this;
     }
    
 };
 
-class graf {
+class graph {
 public:
-    int lWierzch;
-    int lKraw;
-    dynamic_arr<krawedz> krawedzie;
-    dynamic_arr<krawedz> krawedzieMST;
-    dynamic_arr<wezel> wierzcholki;
-    void sortuj_wagami()
+    int points_count;
+    int edge_count;
+    dynamic_arr<edge> edges;
+    dynamic_arr<edge> MSTedges;
+    dynamic_arr<node> points;
+    void sort_by_weight()
     {
-        krawedzie.quickSort(0,krawedzie.size-1);
+        edges.quickSort(0,edges.size-1);
     }
-    void zrobMST();
-    void print_graf()
+    void MakeMST();
+    void print_graph()
     {
-        for (int i = 0; i < krawedzie.size; i++)
+        for (int i = 0; i < edges.size; i++)
         {
-            cout << " {\t " << krawedzie[i].node1 << " ( " << wierzcholki[(krawedzie[i].node1)] << " ) " << ",\t" << krawedzie[i].node2 << " ( " << wierzcholki[(krawedzie[i].node2)] << " ),\t " << krawedzie[i].waga << " }" << endl;
+            cout << " {\t " << edges[i].node1 << " ( " << points[(edges[i].node1)] << " ) " << ",\t" << edges[i].node2 << " ( " << points[(edges[i].node2)] << " ),\t " << edges[i].weight << " }" << endl;
         }
     }
     void print_MST()
     {
-        for (int i = 0; i < krawedzieMST.size; i++)
+        for (int i = 0; i < MSTedges.size; i++)
         {
-            cout << " {\t " << krawedzieMST[i].node1 << " ( " << wierzcholki[(krawedzieMST[i].node1)] << " ) " << ",\t" << krawedzieMST[i].node2 << " ( " << wierzcholki[(krawedzieMST[i].node2)] << " ),\t " << krawedzieMST[i].waga << " }" << endl;
+            cout << " {\t " << MSTedges[i].node1 << " ( " << points[(MSTedges[i].node1)] << " ) " << ",\t" << MSTedges[i].node2 << " ( " << points[(MSTedges[i].node2)] << " ),\t " << MSTedges[i].weight << " }" << endl;
         }
     }
-    graf(int wierzch, int kraw)
+    graph(int point, int edge)
     {
-        lWierzch = wierzch;
-        lKraw = kraw;
-        krawedzie.resize(lKraw);
-        wierzcholki.resize(lWierzch);
+        points_count = point;
+        edge_count = edge;
+        edges.resize(edge_count);
+        points.resize(points_count);
     }
-    graf(string nazwa)
+    graph(string nazwa)
     {
         string sciezka = "C:\\Users\\Lenovo\\Desktop\\studia\\2_Rok\\1Semestr\\Algorytmy\\Ostatni program chyba yay\\UFKruskal\\excercises\\";
         string sciezka2 = nazwa;
@@ -96,20 +96,20 @@ public:
             exit(0);
         }
 
-        plik >> lWierzch;
+        plik >> points_count;
 
-        wierzcholki.resize(lWierzch);
-        for (int i = 0; i < lWierzch; i++) {
-            plik >> wierzcholki[i].x >> wierzcholki[i].y;
+        points.resize(points_count);
+        for (int i = 0; i < points_count; i++) {
+            plik >> points[i].x >> points[i].y;
         }
 
         
-        plik >> lKraw;
+        plik >> edge_count;
 
-        krawedzie.resize(lKraw);
-        for (int i = 0; i < lKraw; i++)
+        edges.resize(edge_count);
+        for (int i = 0; i < edge_count; i++)
         {
-            plik >> krawedzie[i].node1 >> krawedzie[i].node2 >> krawedzie[i].waga;
+            plik >> edges[i].node1 >> edges[i].node2 >> edges[i].weight;
         }
 
         plik.close();
@@ -120,37 +120,37 @@ public:
 
 class UnionFind {
 public:
-    dynamic_arr<int> rodzice;
-    dynamic_arr<int> rangi;
+    dynamic_arr<int> parents;
+    dynamic_arr<int> ranks;
     void Union(int n1,int n2);
     void Union_by_rank(int n1,int n2);
     int Find(int i);
-    int FindKompresja(int i);
+    int FindCompression(int i);
     UnionFind(int n)
     {
-        rodzice.resize(n);
-        rangi.resize(n);
+        parents.resize(n);
+        ranks.resize(n);
         for (int i = 0; i < n; i++)
-            rodzice[i] = i;
+            parents[i] = i;
         for (int i = 0; i < n; i++)
-            rangi[i] = 0;
+            ranks[i] = 0;
     }
 };
 
 int UnionFind::Find(int i)//zwroc korzen swojego drzewa, jesli nie jest nim 'i' to jest nim rodzic, jesli nie rodzic to rodzic rodzica itd
 {
-    if (i == rodzice[i])
+    if (i == parents[i])
         return i;
     else
-        return Find(rodzice[i]);
+        return Find(parents[i]);
 }
-int UnionFind::FindKompresja(int i)
+int UnionFind::FindCompression(int i)
 {
-    if (i == rodzice[i])
+    if (i == parents[i])
         return i;
-    int root = FindKompresja(rodzice[i]);
-    if (root != rodzice[i])
-        rodzice[i] = root;
+    int root = FindCompression(parents[i]);
+    if (root != parents[i])
+        parents[i] = root;
     return root;
 
 }
@@ -158,36 +158,36 @@ void UnionFind::Union(int n1, int n2)
 {
     int n1_root = Find(n1);
     int n2_root = Find(n2);
-    rodzice[n2_root] = n1_root;
+    parents[n2_root] = n1_root;
 }
 
 void UnionFind::Union_by_rank(int n1, int n2)
 {
     int n1_root = Find(n1);
     int n2_root = Find(n2);
-    if (rangi[n1_root] < rangi[n2_root])
-        rodzice[n1_root] = n2_root;
-    else if (rangi[n1_root] > rangi[n2_root])
-        rodzice[n2_root] = rodzice[n1_root];
+    if (ranks[n1_root] < ranks[n2_root])
+        parents[n1_root] = n2_root;
+    else if (ranks[n1_root] > ranks[n2_root])
+        parents[n2_root] = parents[n1_root];
     else
     {
-        rodzice[n1_root] = rodzice[n2_root];
-        rangi[n1_root] += 1;
+        parents[n1_root] = parents[n2_root];
+        ranks[n1_root] += 1;
     }
 }
 
-void graf::zrobMST()
+void graph::MakeMST()
 {
-    sortuj_wagami();
-    UnionFind unia(lKraw);
-    for (int i = 0; i < lKraw; i++)
+    sort_by_weight();
+    UnionFind unia(edge_count);
+    for (int i = 0; i < edge_count; i++)
     {
-        krawedz droga = krawedzie[i];
-        int n1_root = unia.FindKompresja(droga.node1);
-        int n2_root = unia.FindKompresja(droga.node2);
+        edge path = edges[i];
+        int n1_root = unia.FindCompression(path.node1);
+        int n2_root = unia.FindCompression(path.node2);
         if (n1_root != n2_root)
         {
-            krawedzieMST.push(droga);
+            MSTedges.push(path);
             unia.Union_by_rank(n1_root, n2_root);
         }
     }
@@ -195,8 +195,8 @@ void graf::zrobMST()
 }
 int main()
 {
-        graf mapa("g1.txt");
-        mapa.zrobMST();
+        graph mapa("g1.txt");
+        mapa.MakeMST();
         //Unia.Union()
 
         return 0;
