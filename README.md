@@ -1,2 +1,3 @@
 # Kruskal_algorithm_in_Cpp
- A Unionf Find algorithm in cpp
+ A Union Find algorithm in cpp
+Made for my university course
